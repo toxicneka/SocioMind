@@ -7,6 +7,7 @@ from handlers.start import start_router
 from handlers.test import test_router
 from middlewares.db import DbSessionMiddleware
 from services.google_sheets import init_google_sheets
+from services.rag import socio_rag  # Добавьте этот импорт
 
 async def main():
     storage = MemoryStorage()
@@ -15,6 +16,9 @@ async def main():
     
     # Инициализация базы данных
     sessionmaker = await init_db()
+    
+    # Инициализация RAG
+    await socio_rag.build_index('socio.txt')  # Добавьте эту строку
     
     # Добавляем middleware для работы с БД
     dp.update.middleware(DbSessionMiddleware(sessionmaker))

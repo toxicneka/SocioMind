@@ -1,14 +1,23 @@
 from google import genai
 from config import GOOGLE_API_KEY
 import asyncio
+from .rag import socio_rag
 
 client = genai.Client(api_key=GOOGLE_API_KEY)
 
 async def determine_personality_type(answers: list) -> str:
     try:
-        # Формируем промпт для определения соционического типа
+        # Получаем контекст через RAG
+        query = " ".join(answers)
+        context_chunks = socio_rag.search(query, k=3)
+        context = "\n\n".join(context_chunks)
+        
         prompt = f"""
         Проанализируй ответы пользователя на вопросы соционического теста и определи его тип личности по модели А.
+        
+        Контекст о соционических типах:
+        {context}
+        
         Ответы пользователя:
         {chr(10).join([f'{i+1}. {answer}' for i, answer in enumerate(answers)])}
         
@@ -21,10 +30,7 @@ async def determine_personality_type(answers: list) -> str:
         Верни только код типа личности (например: INTJ, ESFP и т.д.)
         """
         
-        # Используем asyncio.to_thread для синхронного вызова
-        loop = asyncio.get_event_loop()
-        response = await loop.run_in_executor(
-            None, 
+        response = await asyncio.to_thread(
             lambda: client.chats.create(model='gemini-2.0-flash').send_message(prompt)
         )
         
