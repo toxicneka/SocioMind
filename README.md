@@ -1,2 +1,2 @@
 # SocioMind
-AI agent "SocioMind" in Telegram
+Telegram bot AI agent "SocioMind"
