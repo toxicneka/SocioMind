@@ -42,7 +42,7 @@ async def cmd_test(message: Message, state: FSMContext, session: AsyncSession):
         
         if latest_personality:
             await message.answer(
-                f"Ваш текущий тип: {latest_personality.personality_type}. Хотите перепройти тест? (Да/Нет)"
+                f"Ваш текущий тип: {latest_personality.personality_type}"
             )
             return
     

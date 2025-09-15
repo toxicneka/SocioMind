@@ -1,9 +1,7 @@
 from google import genai
-from config import GOOGLE_API_KEY
+from .llm_client import client
 import asyncio
 from .rag import socio_rag
-
-client = genai.Client(api_key=GOOGLE_API_KEY)
 
 async def determine_personality_type(answers: list) -> str:
     try:

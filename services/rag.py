@@ -1,6 +1,6 @@
 import numpy as np
 import faiss
-from .gemini import client
+from .llm_client import client
 
 class SocioRAG:
     def __init__(self):
