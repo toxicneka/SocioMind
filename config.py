@@ -6,7 +6,7 @@ load_dotenv()
 TOKEN = os.getenv("BOT_TOKEN")
 AU_TOKEN = os.getenv("GIGACHAT_TOKEN")
 SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
-GOOGLE_SHEETS_CREDS = os.getenv("GOOGLE_SHEETS_CREDS", "google_creds.json")  # значение по умолчанию
+GOOGLE_SHEETS_CREDS = os.getenv("GOOGLE_SHEETS_CREDS", "google_creds.json") 
 
 # Текст помощи и инструкций
 text_help = """
