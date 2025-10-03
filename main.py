@@ -9,7 +9,6 @@ from config import TOKEN
 from handlers.start import router as start_router
 from handlers.test import router as test_router
 from handlers.report import router as report_router
-from handlers.group_commands import router as group_commands_router  # Новый обработчик
 
 logging.basicConfig(level=logging.INFO)
 
@@ -21,13 +20,31 @@ async def main():
     # Тест подключения к Google Sheets
     from services.google_sheets_service import GoogleSheetsService
     sheets_service = GoogleSheetsService()
-    await sheets_service.test_connection()
+    
+    # ПРАВИЛЬНЫЙ ВЫЗОВ - убрал await так как test_connection синхронный
+    if hasattr(sheets_service, 'test_connection'):
+        sheets_service.test_connection()
+    else:
+        logging.warning("GoogleSheetsService не имеет метода test_connection")
+
+    # Инициализация базы данных
+    from utils.helpers import init_db
+    await init_db()
 
     # Регистрация роутеров
     dp.include_router(start_router)
     dp.include_router(test_router)
     dp.include_router(report_router)
+    
+    # Добавляем мониторинг чатов (если файл существует)
+    try:
+        from handlers.chat_monitor import router as chat_monitor_router
+        dp.include_router(chat_monitor_router)
+        logging.info("✅ Chat monitor router загружен")
+    except ImportError as e:
+        logging.warning(f"⚠️ Chat monitor не загружен: {e}")
 
+    logging.info("🤖 Бот запускается...")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
