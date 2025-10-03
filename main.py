@@ -24,14 +24,11 @@ async def main():
     storage = MemoryStorage()
     dp = Dispatcher(storage=storage)
 
-    # Запускаем периодическую очистку
     asyncio.create_task(scheduled_cleanup())
 
-    # Тест подключения к Google Sheets
     from services.google_sheets_service import GoogleSheetsService
     sheets_service = GoogleSheetsService()
     
-    # ПРАВИЛЬНЫЙ ВЫЗОВ - убрал await так как test_connection синхронный
     if hasattr(sheets_service, 'test_connection'):
         sheets_service.test_connection()
     else:
@@ -46,7 +43,6 @@ async def main():
     dp.include_router(test_router)
     dp.include_router(report_router)
     
-    # Добавляем мониторинг чатов (если файл существует)
     try:
         from handlers.chat_monitor import router as chat_monitor_router
         dp.include_router(chat_monitor_router)
