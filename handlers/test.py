@@ -18,6 +18,18 @@ sheets_service = GoogleSheetsService()
 # Хранилище для ответов пользователей
 user_answers = {}
 
+@router.message(Command("test"), F.chat.type.in_({ChatType.GROUP, ChatType.SUPERGROUP}))
+async def test_in_group(message: Message):
+    """Обработка команды /test в групповом чате"""
+    username = f"@{message.from_user.username}" if message.from_user.username else message.from_user.first_name
+    bot_username = (await message.bot.get_me()).username
+    
+    response = f"""❗ {username}, тестирование доступно только в личном чате!
+Перейдите в приватный чат с ботом: @{bot_username}
+и отправьте команду /test там"""
+    
+    await message.answer(response)
+
 # Команда /test работает ТОЛЬКО в личных сообщениях
 @router.message(Command("test"), F.chat.type == ChatType.PRIVATE)
 async def start_test(message: Message, state: FSMContext):

@@ -12,10 +12,20 @@ from handlers.report import router as report_router
 
 logging.basicConfig(level=logging.INFO)
 
+async def scheduled_cleanup():
+    """Периодическая очистка старых сообщений"""
+    while True:
+        await asyncio.sleep(24 * 60 * 60)  # 24 часа
+        from utils.helpers import cleanup_old_messages
+        await cleanup_old_messages()
+
 async def main():
     bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
     storage = MemoryStorage()
     dp = Dispatcher(storage=storage)
+
+    # Запускаем периодическую очистку
+    asyncio.create_task(scheduled_cleanup())
 
     # Тест подключения к Google Sheets
     from services.google_sheets_service import GoogleSheetsService

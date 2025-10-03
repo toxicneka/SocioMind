@@ -121,3 +121,10 @@ async def get_all_users_with_types() -> List[Dict]:
         cursor = await db.execute('SELECT user_id, username, personality_type FROM users WHERE personality_type IS NOT NULL')
         results = await cursor.fetchall()
         return [{'user_id': row[0], 'username': row[1], 'personality_type': row[2]} for row in results]
+
+async def cleanup_old_messages():
+    """Очистка сообщений старше 7 дней"""
+    async with aiosqlite.connect('sociomind.db') as db:
+        await db.execute("DELETE FROM chat_messages WHERE timestamp < datetime('now', '-7 days')")
+        await db.commit()
+        logging.info("✅ Сообщения старше 7 дней очищены")
