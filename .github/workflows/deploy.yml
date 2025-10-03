@@ -19,7 +19,7 @@ jobs:
       - name: Prepare .env file
         run: |
           echo "BOT_TOKEN=${{ secrets.BOT_TOKEN }}" > .env
-          echo "GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}" >> .env
+          echo "GIGACHAT_TOKEN=${{ secrets.GIGACHAT_TOKEN }}" >> .env
           echo "GOOGLE_SHEETS_CREDS=google_creds.json" >> .env
           echo "SPREADSHEET_ID=${{ secrets.SPREADSHEET_ID }}" >> .env
 

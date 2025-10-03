@@ -140,7 +140,6 @@ class GoogleSheetsService:
             return False
         
         try:
-            # Пробуем прочитать первую строку
             self.sheet.row_values(1)
             logger.info("✅ Тест подключения к Google Sheets пройден")
             return True
